@@ -1,4 +1,3 @@
-import type { HealthStatus } from '@tiny-agent/shared'
 import { translate, type TranslationMessage } from '../../i18n/index.js'
 import { resizeUploadImage } from '../../utils/resizeUploadImage.js'
 import { readMessageEvent } from './parseEvent.js'
@@ -98,12 +97,6 @@ export const verifyApiKey = async (apiKey: string, signal?: AbortSignal): Promis
     headers: { Authorization: `Bearer ${apiKey}` },
     signal,
   })
-}
-
-/** 查本机 server 是否活着（monorepo 起步，返回类型来自 packages/shared） */
-export const checkServerHealth = async (): Promise<HealthStatus> => {
-  const res = await fetch('/api/health')
-  return (await res.json()) as HealthStatus
 }
 
 /**
