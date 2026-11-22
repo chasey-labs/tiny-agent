@@ -1,75 +1,47 @@
-# chat-demo
+# tiny-agent
 
-English | [简体中文](README.zh-CN.md)
+菜西的 TypeScript 学习项目：从最基础的 TS，一路写到能在本地跑起来的 Agent 对话。
 
-A static chat demo powered by the DeepSeek API. No application backend is required: the browser connects directly to the configured API service.
+起点是 DeepSeek 开源的 [chat-demo](https://github.com/deepseek-ai/chat-demo)：一个纯前端的聊天应用，浏览器直接请求 DeepSeek 的 Anthropic 兼容接口。它代码不多、写法规范，适合拿来读，也适合在上面一步步加东西。
 
-You can [try the app online](https://deepseek-ai.github.io/chat-demo/) or download the archive from [Releases](https://github.com/deepseek-ai/deepseek-chat-demo/releases), extract it, and double-click `index.html` to use it locally without installation or a build. Enter your API key in Settings before your first chat.
+## 路线
 
-## Getting started
+| 阶段 | 做什么 | 学到什么 |
+| --- | --- | --- |
+| 1. TS 基础 | 读 chat-demo 的真实代码，改小功能 | 类型、函数、模块、Promise / async、async generator |
+| 2. Chat 对话 | 加一个自己的 server：藏 Key、流式转发、存会话 | 前后端分工、HTTP / SSE、共享类型 |
+| 3. 本地 Agent | 让模型能调用本地工具（读文件、跑命令），每一步要我确认 | 工具调用循环、状态管理、权限边界 |
 
-Install Node.js 22.12+ and pnpm, then run:
+每一关都留 TODO 和测试，自己写到测试变绿为止。具体关卡在规划中，定下来后放进 `docs/`。
+
+## 先读哪里
+
+1. `src/services/api/sse.ts`：手写的流式解析，练 Promise 和 async generator。
+2. `src/services/api/client.ts`：怎么把一次请求包成可以 `for await` 的数据流。
+3. `src/services/chat/branches.ts`：消息分支树，练类型和纯函数。
+4. `src/services/chat/store.ts`：zustand 状态管理，最后再啃。
+
+## 运行
+
+需要 Node.js 22.12+ 和 pnpm。
 
 ```sh
-git clone https://github.com/deepseek-ai/chat-demo.git
-cd chat-demo
 pnpm install
-pnpm dev
+pnpm dev        # 打开 http://localhost:8090，在设置里填 DeepSeek API Key
 ```
 
-Open http://localhost:8090.
+| 命令 | 用途 |
+| --- | --- |
+| `pnpm dev` | 启动开发服务器 |
+| `pnpm build` | 构建到 `dist/` |
+| `pnpm type` | TypeScript 类型检查 |
+| `pnpm lint` | oxlint 检查 |
+| `pnpm format` | oxfmt 格式化 |
 
-To build the static site:
+## 来源
+
+Fork 自 [deepseek-ai/chat-demo](https://github.com/deepseek-ai/chat-demo)（MIT），原版说明见 [docs/chat-demo-README.zh-CN.md](docs/chat-demo-README.zh-CN.md)。同步上游：
 
 ```sh
-pnpm build
+git fetch upstream && git merge upstream/main
 ```
-
-The output is written to `dist/`. Deploy it to a static web server or open `dist/index.html` directly. Opening the file directly requires browser support for storage on `file://` pages and an API service that permits their cross-origin requests.
-
-## Features
-
-- Multiple conversations with automatic titles, renaming, and deletion; edit prompts, regenerate replies, and switch between message branches.
-- Streaming replies, deep thinking, smart search, link reading, and source citations; stop generation or continue eligible replies.
-- Upload, paste, or drag and drop attachments; use voice input and read replies aloud. A live audio spectrum appears in the first row of the input area while recording on mobile.
-- Markdown, syntax highlighting, KaTeX math, and Mermaid diagrams.
-- Simplified Chinese and English, light and dark themes, mobile layouts, location settings, and chat history import and export.
-
-## Data and storage
-
-Your API key and settings are stored in the browser's localStorage. Conversations and original attachments are stored in IndexedDB. Local data is isolated by browser profile and site origin. Sending messages, uploading attachments, and using speech features sends the relevant content to the configured API service.
-
-History import and export in Settings use ZIP archives. After confirmation and successful validation, importing replaces all local conversations and attachments. Exports include conversations and locally available original images, but exclude API keys, settings, and original non-image attachments. See the [history import/export documentation (Chinese)](src/services/chat/history/README.md) for the archive format and preservation details.
-
-Settings → Data → Delete all chats clears all local conversations, original attachments, and unsent drafts after confirmation. It stops ongoing replies and returns to a new chat. Your API key and settings are preserved; files already uploaded to the API service are not deleted.
-
-## Development
-
-| Command       | Description                  |
-| ------------- | ---------------------------- |
-| `pnpm dev`    | Start the development server |
-| `pnpm build`  | Build into `dist/`           |
-| `pnpm type`   | Run TypeScript type checks   |
-| `pnpm lint`   | Lint with oxlint             |
-| `pnpm format` | Format with oxfmt            |
-
-[rspack.config.ts](rspack.config.ts) uses `https://api.deepseek.com` by default. Use `createConfig({ apiOrigin, devServer })` to customize the API origin and development server proxy.
-
-Chat uses `deepseek-flash` by default through Anthropic-compatible Messages / Files APIs. Speech features use ASR / TTS endpoints. Requests include extensions for search, link reading, titles, and `latest_reminder`, so the configured service must support the corresponding capabilities. Supported attachment formats are determined by server-side validation.
-
-```text
-src/
-  app/                 Application layout, themes, and global styles
-  components/          Chat, settings, Markdown, and other UI components
-  i18n/                English and Chinese translations
-  services/
-    api/               API requests, SSE, and protocol types
-    chat/              Conversations, message branches, storage, and history import/export
-    markdown/          Markdown parsing, syntax highlighting, and diagrams
-    speech/            Audio recording and read-aloud playback
-  utils/               Shared utilities
-```
-
-## License
-
-[MIT](LICENSE). The build copies the license to `dist/LICENSE`; include it when distributing the app. Third-party dependencies are subject to their own licenses.
