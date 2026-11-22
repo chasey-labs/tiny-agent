@@ -1,0 +1,16 @@
+{
+  "name": "@tiny-agent/shared",
+  "version": "0.0.0",
+  "description": "web 与 server 共享的类型",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "type": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

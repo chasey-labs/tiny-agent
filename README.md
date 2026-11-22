@@ -6,11 +6,11 @@
 
 ## 路线
 
-| 阶段 | 做什么 | 学到什么 |
-| --- | --- | --- |
-| 1. TS 基础 | 读 chat-demo 的真实代码，改小功能 | 类型、函数、模块、Promise / async、async generator |
-| 2. Chat 对话 | 加一个自己的 server：藏 Key、流式转发、存会话 | 前后端分工、HTTP / SSE、共享类型 |
-| 3. 本地 Agent | 让模型能调用本地工具（读文件、跑命令），每一步要我确认 | 工具调用循环、状态管理、权限边界 |
+| 阶段          | 做什么                                                 | 学到什么                                           |
+| ------------- | ------------------------------------------------------ | -------------------------------------------------- |
+| 1. TS 基础    | 读 chat-demo 的真实代码，改小功能                      | 类型、函数、模块、Promise / async、async generator |
+| 2. Chat 对话  | 加一个自己的 server：藏 Key、流式转发、存会话          | 前后端分工、HTTP / SSE、共享类型                   |
+| 3. 本地 Agent | 让模型能调用本地工具（读文件、跑命令），每一步要我确认 | 工具调用循环、状态管理、权限边界                   |
 
 每一关都留 TODO 和测试，自己写到测试变绿为止。具体关卡在规划中，定下来后放进 `docs/`。
 
@@ -23,20 +23,22 @@
 
 ## 运行
 
-需要 Node.js 22.12+ 和 pnpm。
+需要 Node.js 22.12+ 和 pnpm。目录：`apps/web` 前端、`apps/server` 后端、`packages/shared` 共享类型。
 
 ```sh
 pnpm install
-pnpm dev        # 打开 http://localhost:8090，在设置里填 DeepSeek API Key
+pnpm dev        # 同时起 web(:8090) 和 server(:8100)，在设置里填 DeepSeek API Key
 ```
 
-| 命令 | 用途 |
-| --- | --- |
-| `pnpm dev` | 启动开发服务器 |
-| `pnpm build` | 构建到 `dist/` |
-| `pnpm type` | TypeScript 类型检查 |
-| `pnpm lint` | oxlint 检查 |
-| `pnpm format` | oxfmt 格式化 |
+| 命令                       | 用途                                 |
+| -------------------------- | ------------------------------------ |
+| `pnpm dev`                 | 同时启动 web 和 server               |
+| `pnpm --filter web dev`    | 只起前端（:8090）                    |
+| `pnpm --filter server dev` | 只起后端（:8100，`GET /api/health`） |
+| `pnpm build`               | 构建到 `apps/web/dist/`              |
+| `pnpm type`                | TypeScript 类型检查                  |
+| `pnpm lint`                | oxlint 检查                          |
+| `pnpm format`              | oxfmt 格式化                         |
 
 ## 来源
 
