@@ -23,20 +23,22 @@
 
 ## 运行
 
-需要 Node.js 22.12+ 和 pnpm。
+需要 Node.js 22.12+ 和 pnpm。目录：`apps/web` 前端、`apps/server` 后端、`packages/shared` 共享类型。
 
 ```sh
 pnpm install
-pnpm dev        # 打开 http://localhost:8090，在设置里填 DeepSeek API Key
+pnpm dev        # 同时起 web(:8090) 和 server(:8100)，在设置里填 DeepSeek API Key
 ```
 
-| 命令 | 用途 |
-| --- | --- |
-| `pnpm dev` | 启动开发服务器 |
-| `pnpm build` | 构建到 `dist/` |
-| `pnpm type` | TypeScript 类型检查 |
-| `pnpm lint` | oxlint 检查 |
-| `pnpm format` | oxfmt 格式化 |
+| 命令                       | 用途                                 |
+| -------------------------- | ------------------------------------ |
+| `pnpm dev`                 | 同时启动 web 和 server               |
+| `pnpm --filter web dev`    | 只起前端（:8090）                    |
+| `pnpm --filter server dev` | 只起后端（:8100，`GET /api/health`） |
+| `pnpm build`               | 构建到 `apps/web/dist/`              |
+| `pnpm type`                | TypeScript 类型检查                  |
+| `pnpm lint`                | oxlint 检查                          |
+| `pnpm format`              | oxfmt 格式化                         |
 
 ## 来源
 
